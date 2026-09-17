@@ -1,6 +1,6 @@
 import app from "./app";
 import { prisma } from "./app/lib/prisma";
-import { seedForAdmin, seedForCitizen, seedForStaff } from "./app/utils/seed";
+import { seedForAdmin } from "./app/utils/seed";
 const PORT = process.env.PORT || 5000;
 
 
@@ -13,8 +13,8 @@ const main = async () => {
 
 
 		await seedForAdmin()
-		await seedForStaff()
-		await seedForCitizen()
+		// await seedForStaff()
+		// await seedForCitizen()
 
 
 

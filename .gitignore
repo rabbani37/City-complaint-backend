@@ -26,3 +26,4 @@ pnpm-workspace.yaml
 .claude/
 .agents/
 .cursor/
+.vercel
