@@ -17,10 +17,6 @@ app.use(cookieParser());
 
 
 
-
-
-
-
 app.get("/api/v1/health", (_req: Request, res: Response) => {
 	res.status(200).json({
 		success: true,

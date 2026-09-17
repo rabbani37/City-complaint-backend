@@ -12,3 +12,17 @@ yarn.lock
 package-lock.json
 pnpm-workspace.yaml
 .vscode
+
+/src/generated/prisma
+
+/generated/prisma
+
+/generated/prisma
+
+
+
+# AI tool configs (personal, not project-related)
+.windsurf/
+.claude/
+.agents/
+.cursor/
