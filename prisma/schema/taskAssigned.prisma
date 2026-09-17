@@ -1,0 +1,25 @@
+model TaskAssigned {
+  id String @id @default(uuid())
+
+  staffId String
+  staff   StaffProfile @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  assignedById String
+  assignedBy   User   @relation(fields: [assignedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  isActive Boolean @default(true)
+
+  complaintId String?
+  complaint   Complaint? @relation(fields: [complaintId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  serviceRequestId String?
+  serviceRequest   ServiceRequest? @relation(fields: [serviceRequestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([staffId])
+  @@index([complaintId])
+  @@index([serviceRequestId])
+  @@map("task_assigneds")
+}

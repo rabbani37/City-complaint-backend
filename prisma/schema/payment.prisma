@@ -1,0 +1,19 @@
+model Payment {
+  id               String         @id @default(uuid())
+
+  serviceRequestId String         @unique
+  serviceRequest   ServiceRequest @relation(fields: [serviceRequestId], references: [id])
+
+  amount           Decimal        @db.Decimal(10, 2)
+  status           PaymentStatus  @default(INITIATED)
+  
+  transactionId    String?
+  gateway          String?
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@map("payments")
+}

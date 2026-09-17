@@ -1,0 +1,32 @@
+model StaffProfile {
+  id      String  @id @default(uuid())
+
+  userId  String  @unique
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  address String?
+  nid     String
+
+  image_url     String?
+  imagePublicId String?
+
+  experienceYears Int
+  expertise       String
+  abouts          String?
+
+  approvedById   String 
+  approvedPerson Admin     @relation( fields: [approvedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  approvedAt     DateTime?
+
+  departmentId String @unique
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  taskAssigned       TaskAssigned[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+
+  @@map("staff_profiles")
+}

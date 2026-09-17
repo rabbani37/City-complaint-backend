@@ -1,0 +1,20 @@
+model Category {
+  id           String     @id @default(uuid())
+  name         String     @unique
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  
+  isPaid       Boolean    @default(false)
+  fee          Decimal?   @db.Decimal(10, 2)
+
+  complaints      Complaint[]
+  serviceRequests ServiceRequest[]
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([departmentId])
+  @@map("categories")
+}

@@ -1,6 +1,25 @@
-model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
-  name  String?
-  posts Post[]
-} 
+model User {
+  id              String       @id @default(uuid())
+  name            String
+  email           String       @unique
+  password        String?
+  role            Role
+  status          UserStatus   @default(ACTIVE)
+  provider        AuthProvider @default(CREDENTIALS)
+  isEmailVerified Boolean      @default(false)
+  phone           String?
+
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+
+  citizenProfile CitizenProfile?
+  staffProfile   StaffProfile?
+  admin          Admin?
+  taskAssigned       TaskAssigned[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([role, status])
+  @@map("users")
+}

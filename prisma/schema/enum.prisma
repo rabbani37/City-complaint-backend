@@ -1,0 +1,40 @@
+enum Role {
+  CITIZEN
+  STAFF
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  BLOCKED
+  REJECTED
+}
+
+enum AuthProvider {
+  CREDENTIALS
+  GOOGLE
+}
+
+enum ComplaintStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  REOPENED
+}
+
+enum ServiceRequestStatus {
+  PENDING_PAYMENT
+  PAID
+  PROCESSING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentStatus {
+  INITIATED
+  SUCCESS
+  FAILED
+}

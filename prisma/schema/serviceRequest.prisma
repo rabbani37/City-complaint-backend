@@ -1,0 +1,27 @@
+model ServiceRequest {
+  id          String               @id @default(uuid())
+  title       String
+  description String
+  status      ServiceRequestStatus @default(PENDING_PAYMENT)
+
+  fee         Decimal              @db.Decimal(10, 2)
+
+  citizenId String
+  citizen   CitizenProfile @relation(fields: [citizenId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  taskAssigned       TaskAssigned[]
+  payment     Payment?
+
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([status])
+  @@index([citizenId])
+  @@map("service_requests")
+}
