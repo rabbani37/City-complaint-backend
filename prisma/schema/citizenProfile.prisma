@@ -4,7 +4,10 @@ model CitizenProfile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  address       String?
+  name    String
+  email   String  @unique
+  address String?
+
   image_url     String?
   imagePublicId String?
 

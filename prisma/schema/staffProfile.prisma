@@ -1,9 +1,11 @@
 model StaffProfile {
-  id      String  @id @default(uuid())
+  id String @id @default(uuid())
 
-  userId  String  @unique
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
+  name    String
+  email   String  @unique
   address String?
   nid     String
 
@@ -14,19 +16,18 @@ model StaffProfile {
   expertise       String
   abouts          String?
 
-  approvedById   String 
-  approvedPerson Admin     @relation( fields: [approvedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  approvedById   String
+  approvedPerson AdminProfile @relation(fields: [approvedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  approvedAt     DateTime?
+  approvedAt DateTime?
 
-  departmentId String @unique
+  departmentId String     @unique
   department   Department @relation(fields: [departmentId], references: [id])
 
-  taskAssigned       TaskAssigned[]
+  taskAssigned TaskAssigned[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("staff_profiles")
 }
