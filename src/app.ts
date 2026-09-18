@@ -1,4 +1,8 @@
-import express, { type Application, type Request, type Response } from "express";
+import express, {
+	type Application,
+	type Request,
+	type Response,
+} from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -13,22 +17,8 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-
-
-
-
 // Routes
 app.use("/api/v1/auth", AuthRoutes);
-
-
-
-
-
-
-
-
-
-
 
 app.get("/api/v1/health", (_req: Request, res: Response) => {
 	res.status(200).json({
@@ -38,9 +28,7 @@ app.get("/api/v1/health", (_req: Request, res: Response) => {
 	});
 });
 
-
-
-app.use(notFound)
-app.use(globalErrorHandler)
+app.use(notFound);
+app.use(globalErrorHandler);
 
 export default app;

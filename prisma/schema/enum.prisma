@@ -9,6 +9,7 @@ enum UserStatus {
   PENDING
   BLOCKED
   REJECTED
+  DELETED
 }
 
 enum AuthProvider {
