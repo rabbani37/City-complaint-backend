@@ -16,8 +16,8 @@ model StaffProfile {
   expertise       String
   abouts          String?
 
-  approvedById   String
-  approvedPerson AdminProfile @relation(fields: [approvedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  approvedById   String?
+  approvedPerson AdminProfile? @relation(fields: [approvedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   approvedAt DateTime?
 
