@@ -8,6 +8,7 @@ model User {
   provider        AuthProvider @default(CREDENTIALS)
   emailVerified Boolean      @default(false)
   phone           String?
+  googleId String? @unique
 
   isDeleted Boolean   @default(false)
   deletedAt DateTime?

@@ -15,7 +15,6 @@ const registerCitizen = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
-
 const verifyAccount = catchAsync(async (req: Request, res: Response) => {
 	const result = await AuthService.verifyAccount(req.body);
 
@@ -37,7 +36,16 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const googleLogin = catchAsync(async (req: Request, res: Response) => {
+	const result = await AuthService.googleLogin(req.body);
 
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "Google Login Successfully",
+		data: result,
+	});
+});
 
 const registerStaff = catchAsync(async (req: Request, res: Response) => {
 	const result = await AuthService.registerStaff(req.body);
@@ -54,5 +62,6 @@ export const AuthController = {
 	registerCitizen,
 	verifyAccount,
 	loginUser,
+	googleLogin,
 	registerStaff,
 };

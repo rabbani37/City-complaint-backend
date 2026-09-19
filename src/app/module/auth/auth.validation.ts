@@ -21,19 +21,19 @@ const registerStaffSchema = z.object({
 
 const loginSchema = z.object({
 	email: z.email("Provide a valid Email"),
-	password: z.
-		string("Password id required")
-		.min(6, "Password must be at least 6 characters")
+	password: z
+		.string("Password id required")
+		.min(6, "Password must be at least 6 characters"),
 });
 
- const 	accountVerifySchema = z.object({
+const accountVerifySchema = z.object({
 	email: z.email("Email is required"),
-	otp: z.string().length(6)
-})
+	otp: z.string().length(6),
+});
 
 export const AuthValidation = {
 	registerCitizenSchema,
 	registerStaffSchema,
 	loginSchema,
-	accountVerifySchema
+	accountVerifySchema,
 };

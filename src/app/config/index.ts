@@ -8,7 +8,8 @@ export default {
 	port: process.env.PORT,
 	database_url: process.env.DATABASE_URL,
 	// bak_url: process.env.APP_URL,
-	// frontend_url: process.env.FRONTEND_URL,
+	frontend_url: process.env.FRONTEND_URL,
+	google_client_id: process.env.GOOGLE_CLIENT_ID!,
 
 	bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
 
@@ -17,8 +18,6 @@ export default {
 
 	jwt_access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN!,
 	jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN!,
-
-	// google_client_id: process.env.GOOGLE_CLIENT_ID!,
 
 	test_admin_name: process.env.TEST_ADMIN_NAME!,
 	test_admin_email: process.env.TEST_ADMIN_EMAIL!,

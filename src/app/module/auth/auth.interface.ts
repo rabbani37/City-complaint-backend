@@ -1,4 +1,4 @@
-import { Role } from "../../../generated/prisma/enums";
+import type { Role } from "../../../generated/prisma/enums";
 
 export interface IRegistrationCitizenPayload {
 	name: string;
@@ -20,7 +20,6 @@ export interface ILoginUserPayload {
 	email: string;
 	password: string;
 }
-
 
 export interface IRequestUser {
 	userId: string;
@@ -44,5 +43,5 @@ export interface ResetPasswordPayload {
 }
 export interface IVerifyEmailPayload {
 	email: string;
-	otp: string
+	otp: string;
 }

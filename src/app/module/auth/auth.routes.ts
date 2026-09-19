@@ -20,6 +20,7 @@ router.post(
 	validationRequest(AuthValidation.loginSchema),
 	AuthController.loginUser,
 );
+router.post("/google", AuthController.googleLogin);
 
 router.post(
 	"/staff-apply",
