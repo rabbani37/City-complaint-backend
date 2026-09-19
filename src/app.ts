@@ -22,8 +22,6 @@ app.use(cookieParser());
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/users", UsersRoutes);
 
-
-
 app.get("/api/v1/health", (_req: Request, res: Response) => {
 	res.status(200).json({
 		success: true,

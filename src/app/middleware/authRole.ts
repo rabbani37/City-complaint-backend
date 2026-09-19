@@ -9,17 +9,13 @@ import config from "../config";
 import type { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
 
-
-
 declare global {
 	namespace Express {
 		interface Request {
 			user?: IRequestUser;
 		}
 	}
-};
-
-
+}
 
 export const auth = (...requiredRoles: Role[]) => {
 	return catchAsync(
@@ -35,7 +31,7 @@ export const auth = (...requiredRoles: Role[]) => {
 					HttpStatus.NOT_FOUND,
 					"You are not logged in. Please log in to access this resource.",
 				);
-			};
+			}
 
 			const verifiedToken = jwtUtils.verifyToken(
 				token,
@@ -47,7 +43,7 @@ export const auth = (...requiredRoles: Role[]) => {
 					HttpStatus.INTERNAL_SERVER_ERROR,
 					verifiedToken.error,
 				);
-			};
+			}
 
 			const { email, name, userId, role } = verifiedToken.data as JwtPayload;
 
@@ -56,7 +52,7 @@ export const auth = (...requiredRoles: Role[]) => {
 					HttpStatus.FORBIDDEN,
 					"Forbidden. You don't have permission to access this resource.",
 				);
-			};
+			}
 
 			const user = await prisma.user.findUnique({
 				where: {
@@ -76,7 +72,7 @@ export const auth = (...requiredRoles: Role[]) => {
 					HttpStatus.NOT_ACCEPTABLE,
 					"Your account has been blocked. Please contact support.",
 				);
-			};
+			}
 
 			req.user = {
 				email,

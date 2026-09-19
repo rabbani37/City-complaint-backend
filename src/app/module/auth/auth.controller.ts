@@ -27,14 +27,6 @@ const verifyAccount = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
-
-
-
-
-
-
-
-
 const loginUser = catchAsync(async (req: Request, res: Response) => {
 	const { accessToken, refreshToken } = await AuthService.loginUser(req.body);
 
@@ -125,7 +117,6 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
-
 // auth.controller.ts
 const logOut = catchAsync(async (_req: Request, res: Response) => {
 	res.clearCookie("accessToken", {
@@ -143,18 +134,9 @@ const logOut = catchAsync(async (_req: Request, res: Response) => {
 		statusCode: HttpStatus.OK,
 		success: true,
 		message: "User Logged out successfully",
-		data: {}
+		data: {},
 	});
 });
-
-
-
-
-
-
-
-
-
 
 export const AuthController = {
 	registerCitizen,
@@ -163,5 +145,5 @@ export const AuthController = {
 	googleLogin,
 	registerStaff,
 	refreshToken,
-	logOut
+	logOut,
 };
