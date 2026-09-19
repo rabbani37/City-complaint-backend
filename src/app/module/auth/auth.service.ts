@@ -1,6 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import type {
+	ILoginUserPayload,
 	IRegistrationCitizenPayload,
 	IRegistrationStaffPayload,
 	IVerifyEmailPayload,
@@ -142,10 +143,10 @@ const verifyAccount = async (payload: IVerifyEmailPayload) => {
 
 		},
 		omit: { password: true },
-		include:{citizenProfile:true}
+		include: { citizenProfile: true }
 	})
 
-	
+
 	const jwtPayload = {
 		userId: user.id,
 		name: user.name,
@@ -165,12 +166,16 @@ const verifyAccount = async (payload: IVerifyEmailPayload) => {
 		config.jwt_refresh_expires_in as SignOptions,
 	);
 
+
+
+
 	return {
 		user,
 		accessToken,
 		refreshToken,
 	};
 }
+
 
 
 
@@ -222,8 +227,86 @@ const registerStaff = async (payload: IRegistrationStaffPayload) => {
 	return user;
 };
 
+
+
+const loginUser = async (payload: ILoginUserPayload) => {
+	const email = payload.email.trim().toLowerCase();
+	const password = payload.password.trim()
+	const user = await prisma.user.findUnique({
+		where: { email },
+	});
+
+	if (!user) {
+
+		throw new AppError(HttpStatus.NOT_FOUND, "User Not Found!!!!",)
+	}
+
+	if (user.status === UserStatus.BLOCKED) {
+		throw new AppError(HttpStatus.CONFLICT, "User is blocked")
+	}
+
+	if (user.isDeleted || user.status === UserStatus.DELETED) {
+		throw new AppError(HttpStatus.CONFLICT, "User is deleted")
+	}
+
+
+
+	const isPasswordMatched = await bcrypt.compare(
+		password,
+		user.password as string,
+	);
+
+	if (!isPasswordMatched) {
+		throw new AppError(HttpStatus.CONFLICT, "Invalid credentials")
+
+	}
+
+	const jwtPayload = {
+		userId: user.id,
+		name: user.name,
+		email: user.email,
+		role: user.role,
+	};
+
+	const accessToken = jwtUtils.createToken(
+		jwtPayload,
+		config.jwt_access_secret,
+		config.jwt_access_expires_in as SignOptions,
+	);
+
+	const refreshToken = jwtUtils.createToken(
+		jwtPayload,
+		config.jwt_refresh_secret,
+		config.jwt_refresh_expires_in as SignOptions,
+	);
+
+	return {
+		accessToken,
+		refreshToken,
+	};
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const AuthService = {
 	registerCitizen,
 	verifyAccount,
+	loginUser,
 	registerStaff,
 };

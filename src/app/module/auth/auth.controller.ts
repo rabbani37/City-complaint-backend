@@ -10,10 +10,12 @@ const registerCitizen = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: HttpStatus.CREATED,
 		success: true,
-		message: "Verify Account Please...",
+		message: " Please! Verify Account ",
 		data: result,
 	});
 });
+
+
 const verifyAccount = catchAsync(async (req: Request, res: Response) => {
 	const result = await AuthService.verifyAccount(req.body);
 
@@ -21,6 +23,16 @@ const verifyAccount = catchAsync(async (req: Request, res: Response) => {
 		statusCode: HttpStatus.CREATED,
 		success: true,
 		message: "Verification Successfully",
+		data: result,
+	});
+});
+const loginUser = catchAsync(async (req: Request, res: Response) => {
+	const result = await AuthService.loginUser(req.body);
+
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "User Login Successfully",
 		data: result,
 	});
 });
@@ -41,5 +53,6 @@ const registerStaff = catchAsync(async (req: Request, res: Response) => {
 export const AuthController = {
 	registerCitizen,
 	verifyAccount,
+	loginUser,
 	registerStaff,
 };
