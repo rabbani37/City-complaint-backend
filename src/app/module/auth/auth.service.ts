@@ -189,6 +189,7 @@ const registerStaff = async (payload: IRegistrationStaffPayload) => {
 		throw new AppError(HttpStatus.CONFLICT, "Email already registered");
 	}
 
+
 	const department = await prisma.department.findUnique({
 		where: { id: payload.departmentId },
 	});
@@ -202,7 +203,10 @@ const registerStaff = async (payload: IRegistrationStaffPayload) => {
 		Number(config.bcrypt_salt_rounds),
 	);
 
-	const user = await prisma.user.create({
+
+
+
+	await prisma.user.create({
 		data: {
 			name: payload.name,
 			email: payload.email,
@@ -224,7 +228,6 @@ const registerStaff = async (payload: IRegistrationStaffPayload) => {
 		omit: { password: true },
 	});
 
-	return user;
 };
 
 
@@ -233,17 +236,20 @@ const loginUser = async (payload: ILoginUserPayload) => {
 	const email = payload.email.trim().toLowerCase();
 	const password = payload.password.trim()
 	const user = await prisma.user.findUnique({
-		where: { email },
+		where: { email, },
 	});
 
 	if (!user) {
-
 		throw new AppError(HttpStatus.NOT_FOUND, "User Not Found!!!!",)
 	}
 
+	if (!user.emailVerified) {
+		throw new AppError(HttpStatus.CONFLICT, "User is Not Verified")
+	}
 	if (user.status === UserStatus.BLOCKED) {
 		throw new AppError(HttpStatus.CONFLICT, "User is blocked")
 	}
+
 
 	if (user.isDeleted || user.status === UserStatus.DELETED) {
 		throw new AppError(HttpStatus.CONFLICT, "User is deleted")
