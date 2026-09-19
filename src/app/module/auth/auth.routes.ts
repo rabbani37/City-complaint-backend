@@ -2,6 +2,8 @@ import { Router } from "express";
 import { validationRequest } from "../../middleware/validationRequest";
 import { AuthValidation } from "./auth.validation";
 import { AuthController } from "./auth.controller";
+import { auth } from "../../middleware/authRole";
+import { Role } from "../../../generated/prisma/enums";
 
 const router = Router();
 
@@ -21,6 +23,11 @@ router.post(
 	AuthController.loginUser,
 );
 router.post("/google", AuthController.googleLogin);
+router.post(
+	"/refresh-token",
+	auth(Role.STAFF, Role.CITIZEN, Role.ADMIN),
+	AuthController.refreshToken,
+);
 
 router.post(
 	"/staff-apply",

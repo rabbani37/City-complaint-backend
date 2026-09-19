@@ -26,24 +26,50 @@ const verifyAccount = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-	const result = await AuthService.loginUser(req.body);
+	const { accessToken, refreshToken } = await AuthService.loginUser(req.body);
+
+	res.cookie("accessToken", accessToken, {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+		maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+	});
+	res.cookie("refreshToken", refreshToken, {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+	});
 
 	sendResponse(res, {
 		statusCode: HttpStatus.OK,
 		success: true,
 		message: "User Login Successfully",
-		data: result,
+		data: { accessToken, refreshToken },
 	});
 });
 
 const googleLogin = catchAsync(async (req: Request, res: Response) => {
-	const result = await AuthService.googleLogin(req.body);
+	const { refreshToken, accessToken } = await AuthService.googleLogin(req.body);
+
+	res.cookie("accessToken", accessToken, {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+		maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+	});
+	res.cookie("refreshToken", refreshToken, {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+	});
 
 	sendResponse(res, {
 		statusCode: HttpStatus.OK,
 		success: true,
 		message: "Google Login Successfully",
-		data: result,
+		data: { accessToken, refreshToken },
 	});
 });
 
@@ -58,10 +84,42 @@ const registerStaff = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+	if (!req.cookies.refreshToken) {
+		throw new Error("Refresh token is missing");
+	}
+	const result = await AuthService.refreshToken(req.cookies.refreshToken);
+	const { accessToken, refreshToken: newRefreshToken } = result;
+
+	res.cookie("accessToken", accessToken, {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+		maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+	});
+	res.cookie("refreshToken", newRefreshToken, {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+	});
+
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "New tokens generated successfully",
+		data: {
+			accessToken,
+			refreshToken: newRefreshToken,
+		},
+	});
+});
+
 export const AuthController = {
 	registerCitizen,
 	verifyAccount,
 	loginUser,
 	googleLogin,
 	registerStaff,
+	refreshToken,
 };
