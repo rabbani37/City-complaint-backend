@@ -1,6 +1,8 @@
 import { createClient } from "redis";
 import config from "../config";
 
+
+
 export const redisClient = createClient({
 	username: config.redist_user,
 	password: config.redist_password,
@@ -9,3 +11,7 @@ export const redisClient = createClient({
 		port: Number(config.redist_port),
 	},
 });
+
+
+
+

@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { AuthService } from "./auth.service";
 import { sendResponse } from "../../utils/sendResponse";
 import HttpStatus from "http-status";
+import config from "../../config";
 
 const registerCitizen = catchAsync(async (req: Request, res: Response) => {
 	const result = await AuthService.registerCitizen(req.body);
@@ -25,6 +26,15 @@ const verifyAccount = catchAsync(async (req: Request, res: Response) => {
 		data: result,
 	});
 });
+
+
+
+
+
+
+
+
+
 const loginUser = catchAsync(async (req: Request, res: Response) => {
 	const { accessToken, refreshToken } = await AuthService.loginUser(req.body);
 
@@ -115,6 +125,37 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+
+// auth.controller.ts
+const logOut = catchAsync(async (_req: Request, res: Response) => {
+	res.clearCookie("accessToken", {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+	});
+	res.clearCookie("refreshToken", {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+	});
+
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "User Logged out successfully",
+		data: {}
+	});
+});
+
+
+
+
+
+
+
+
+
+
 export const AuthController = {
 	registerCitizen,
 	verifyAccount,
@@ -122,4 +163,5 @@ export const AuthController = {
 	googleLogin,
 	registerStaff,
 	refreshToken,
+	logOut
 };

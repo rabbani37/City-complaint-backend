@@ -30,6 +30,12 @@ router.post(
 );
 
 router.post(
+	"/logout",
+	auth(Role.STAFF, Role.CITIZEN, Role.ADMIN),
+	AuthController.logOut,
+);
+
+router.post(
 	"/staff-apply",
 	validationRequest(AuthValidation.registerStaffSchema),
 	AuthController.registerStaff,
