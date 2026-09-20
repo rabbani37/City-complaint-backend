@@ -40,9 +40,9 @@ export default {
 	smtp_password: process.env.SMTP_PASSWORD!,
 	smtp_sender: process.env.EMAIL_SENDER!,
 
-	// cloudinary_name: process.env.CLOUDINARY_CLOUD_NAME!,
-	// cloudinary_api_key: process.env.CLOUDINARY_API_KEY!,
-	// cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET!,
+	cloudinary_name: process.env.CLOUDINARY_CLOUD_NAME!,
+	cloudinary_api_key: process.env.CLOUDINARY_API_KEY!,
+	cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET!,
 
 	// bkash_base_url: process.env.BKASH_BASE_URL!,
 	// bkash_username: process.env.BKASH_USERNAME!,
