@@ -6,6 +6,7 @@ import type {
 	ILoginUserPayload,
 	IRegistrationCitizenPayload,
 	IRegistrationStaffPayload,
+	IRequestUser,
 	IVerifyEmailPayload,
 	ResetPasswordPayload,
 } from "./auth.interface";
@@ -521,7 +522,7 @@ const forgetPassword = async (payload: ForgotPasswordPayload) => {
 };
 
 const resetPassword = async (payload: ResetPasswordPayload) => {
-	const { email, newPassword } = payload;
+	const { email, otp, newPassword } = payload;
 
 	const isExsistUser = await prisma.user.findUnique({
 		where: { email },
@@ -541,6 +542,15 @@ const resetPassword = async (payload: ResetPasswordPayload) => {
 	}
 	if (!isExsistUser.emailVerified) {
 		throw new Error("User not veryfied");
+	}
+
+	const otpKey = `forget-password-otp:${email}`;
+	const redistOpt = await redisClient.get(otpKey);
+	if (!otp) {
+		throw new AppError(HttpStatus.NOT_FOUND, "Invalid OTP");
+	}
+	if (otp !== redistOpt) {
+		throw new AppError(HttpStatus.CONFLICT, "Invalid Dose Not Matched");
 	}
 
 	const newHashPassword = await bcrypt.hash(

@@ -4,18 +4,20 @@ model Complaint {
   description String
   location    String?
 
-  latitude  Float?
-  longitude Float?
-  status    ComplaintStatus @default(PENDING)
+  latitude        Float?
+  longitude       Float?
+  status          ComplaintStatus @default(PENDING)
+  complaintImages Json?
 
   citizenId  String
-  citizen    CitizenProfile     @relation(fields: [citizenId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  citizen    CitizenProfile @relation(fields: [citizenId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category   Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  taskAssigned       TaskAssigned[]
-  feedback    Feedback?
+  taskAssigned TaskAssigned[]
+  feedback     Feedback?
 
+  isDeleted Boolean   @default(false)
   deletedAt DateTime?
 
   createdAt DateTime @default(now())

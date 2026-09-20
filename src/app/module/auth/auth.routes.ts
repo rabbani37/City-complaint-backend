@@ -38,18 +38,21 @@ router.post(
 
 router.post(
 	"/staff-apply",
+	auth(Role.STAFF, Role.ADMIN),
 	validationRequest(AuthValidation.registerStaffSchema),
 	AuthController.registerStaff,
 );
 
 router.post(
 	"/forget-password",
+
 	validationRequest(AuthValidation.forgetPasswordShcema),
 	AuthController.forgetPassword,
 );
 
 router.post(
 	"/reset-password",
+
 	validationRequest(AuthValidation.resetPasswordSchema),
 	AuthController.resetPassword,
 );
