@@ -1,5 +1,5 @@
 import { tr } from "zod/locales";
-import { Role } from "../../generated/prisma/enums";
+import { Role, UserStatus } from "../../generated/prisma/enums";
 import config from "../config";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcrypt";
@@ -100,6 +100,7 @@ export const seedForStaff = async () => {
 				email,
 				password: hashPass,
 				role: Role.STAFF,
+				status: UserStatus.ACTIVE,
 				emailVerified: true,
 				staffProfile: {
 					create: {

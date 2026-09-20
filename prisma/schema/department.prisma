@@ -4,9 +4,10 @@ model Department {
   description String?
 
   categories Category[]
-  staff      StaffProfile?
-
-  deletedAt DateTime?
+  staff      StaffProfile[]
+  
+  isDeleted  Boolean        @default(false)
+  deletedAt  DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

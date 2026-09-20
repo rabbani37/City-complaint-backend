@@ -21,7 +21,7 @@ model StaffProfile {
 
   approvedAt DateTime?
 
-  departmentId String     @unique
+  departmentId String    
   department   Department @relation(fields: [departmentId], references: [id])
 
   taskAssigned TaskAssigned[]
