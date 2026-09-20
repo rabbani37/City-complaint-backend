@@ -1,21 +1,21 @@
 model User {
-  id              String       @id @default(uuid())
-  name            String
-  email           String       @unique
-  password        String?
-  role            Role
-  status          UserStatus   @default(ACTIVE)
-  provider        AuthProvider @default(CREDENTIALS)
+  id            String       @id @default(uuid())
+  name          String
+  email         String       @unique
+  password      String?
+  role          Role
+  status        UserStatus   @default(ACTIVE)
+  provider      AuthProvider @default(CREDENTIALS)
   emailVerified Boolean      @default(false)
-  phone           String?
-  googleId String? @unique
+  phone         String?
+  googleId      String?      @unique
 
   isDeleted Boolean   @default(false)
   deletedAt DateTime?
 
   citizenProfile CitizenProfile?
   staffProfile   StaffProfile?
-  adminProfile          AdminProfile?
+  adminProfile   AdminProfile?
   taskAssigned   TaskAssigned[]
 
   createdAt DateTime @default(now())

@@ -5,21 +5,31 @@ import HttpStatus from "http-status";
 import { UserService } from "./users.service";
 
 const getMe = catchAsync(async (req: Request, res: Response) => {
-    const user = req.user!;
-    const result = await UserService.getMe(user);
+	const user = req.user!;
+	const result = await UserService.getMe(user);
 
-
-    sendResponse(res, {
-        statusCode: HttpStatus.OK,
-        success: true,
-        message: "Retrive Users Profile successfully",
-        data: result,
-    });
-    
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "Retrive Users Profile successfully",
+		data: result,
+	});
 });
 
+const userUpdate = catchAsync(async (req: Request, res: Response) => {
+	const user = req.user!;
+	const payload = req.body;
+	const result = await UserService.userUpdate(payload, user);
 
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "Updated Users Profile successfully",
+		data: result,
+	});
+});
 
 export const UsersController = {
-    getMe,
+	getMe,
+	userUpdate,
 };

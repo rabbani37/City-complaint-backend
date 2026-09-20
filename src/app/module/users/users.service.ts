@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma";
 import HttpStatus from "http-status";
 import type { IRequestUser } from "../auth/auth.interface";
 import { AppError } from "../../utils/AppError";
+import type { IUserUpdatePayload } from "./users.interface";
 
 const getMe = async (user: IRequestUser) => {
 	const meUser = await prisma.user.findUnique({
@@ -38,6 +39,76 @@ const getMe = async (user: IRequestUser) => {
 	return { ...meUser, profile };
 };
 
+const userUpdate = async (payload: IUserUpdatePayload, user: IRequestUser) => {
+	const existingUser = await prisma.user.findUnique({
+		where: { id: user.userId },
+	});
+
+	if (!existingUser) {
+		throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+	}
+
+	if (existingUser.status === UserStatus.DELETED && existingUser.isDeleted) {
+		throw new AppError(HttpStatus.FORBIDDEN, "Your account has been deleted");
+	}
+
+	if (existingUser.status === UserStatus.BLOCKED) {
+		throw new AppError(HttpStatus.FORBIDDEN, "Your account has been blocked");
+	}
+	if (existingUser.status !== UserStatus.ACTIVE) {
+		throw new AppError(HttpStatus.FORBIDDEN, "Your account has not Active");
+	}
+
+	const result = await prisma.$transaction(async (tx) => {
+		const updatedUser = await tx.user.update({
+			where: { id: user.userId },
+			data: {
+				name: payload.name,
+				phone: payload.phone,
+			},
+			omit: { password: true },
+		});
+
+		// Step 2: role অনুযায়ী profile update
+		let updatedProfile = null;
+
+		if (existingUser.role === Role.CITIZEN) {
+			updatedProfile = await tx.citizenProfile.update({
+				where: { email: user.email },
+				data: {
+					name: payload.name,
+					address: payload.citizen?.address,
+				},
+			});
+		} else if (existingUser.role === Role.STAFF) {
+			updatedProfile = await tx.staffProfile.update({
+				where: { email: user.email },
+				data: {
+					address: payload.staff?.address,
+					abouts: payload.staff?.abouts,
+					experienceYears: payload.staff?.experienceYears,
+					expertise: payload.staff?.expertise,
+					name: payload.name,
+				},
+				include: { department: true },
+			});
+		} else if (existingUser.role === Role.ADMIN) {
+			updatedProfile = await tx.adminProfile.update({
+				where: { email: user.email },
+				data: {
+					name: payload.name,
+					address: payload.admin?.address,
+				},
+			});
+		}
+
+		return { updatedUser, updatedProfile };
+	});
+
+	return { ...result.updatedUser, profile: result.updatedProfile };
+};
+
 export const UserService = {
 	getMe,
+	userUpdate,
 };
