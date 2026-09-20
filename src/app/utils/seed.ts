@@ -1,4 +1,3 @@
-import { tr } from "zod/locales";
 import { Role, UserStatus } from "../../generated/prisma/enums";
 import config from "../config";
 import { prisma } from "../lib/prisma";

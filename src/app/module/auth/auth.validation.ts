@@ -4,15 +4,39 @@ const registerCitizenSchema = z.object({
 	name: z.string("Name is required").min(2),
 	email: z.string("Email is required").email("Invalid email"),
 	password: z
-		.string("Password is required")
-		.min(6, "Password must be at least 6 characters"),
+		.string()
+		.min(8, { message: "Password must be at least 8 characters long" })
+		.max(100, { message: "Password cannot exceed 100 characters" })
+		.regex(/[A-Z]/, {
+			message: "Password must contain at least one uppercase letter",
+		})
+		.regex(/[a-z]/, {
+			message: "Password must contain at least one lowercase letter",
+		})
+		.regex(/[0-9]/, { message: "Password must contain at least one number" })
+		.regex(/[^A-Za-z0-9]/, {
+			message: "Password must contain at least one special character",
+		}),
 	phone: z.string().optional(),
 });
 
 const registerStaffSchema = z.object({
 	name: z.string("Name is required").min(2),
 	email: z.string("Email is required").email("Invalid email"),
-	password: z.string("Password is required").min(6),
+	password: z
+		.string()
+		.min(8, { message: "Password must be at least 8 characters long" })
+		.max(100, { message: "Password cannot exceed 100 characters" })
+		.regex(/[A-Z]/, {
+			message: "Password must contain at least one uppercase letter",
+		})
+		.regex(/[a-z]/, {
+			message: "Password must contain at least one lowercase letter",
+		})
+		.regex(/[0-9]/, { message: "Password must contain at least one number" })
+		.regex(/[^A-Za-z0-9]/, {
+			message: "Password must contain at least one special character",
+		}),
 	nid: z.string("nid is required"),
 	departmentId: z.string("Department is required"),
 	experienceYears: z.number("experienceYears is required"),

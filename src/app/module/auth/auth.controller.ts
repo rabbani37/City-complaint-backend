@@ -11,19 +11,21 @@ const registerCitizen = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: HttpStatus.CREATED,
 		success: true,
-		message: " Please! Verify Account ",
+		message: "Sent an otp to your email for account verification.",
 		data: result,
 	});
 });
 
 const verifyAccount = catchAsync(async (req: Request, res: Response) => {
-	const result = await AuthService.verifyAccount(req.body);
+	const { accessToken, user, refreshToken } = await AuthService.verifyAccount(
+		req.body,
+	);
 
 	sendResponse(res, {
 		statusCode: HttpStatus.CREATED,
 		success: true,
 		message: "Verification Successfully",
-		data: result,
+		data: { ...user, accessToken, refreshToken },
 	});
 });
 
