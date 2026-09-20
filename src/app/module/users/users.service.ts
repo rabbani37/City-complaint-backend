@@ -1,7 +1,10 @@
 import { Role, UserStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import HttpStatus from "http-status";
-import type { IRequestUser } from "../auth/auth.interface";
+import type {
+	ForgotPasswordPayload,
+	IRequestUser,
+} from "../auth/auth.interface";
 import { AppError } from "../../utils/AppError";
 import type { IUserUpdatePayload } from "./users.interface";
 
@@ -69,7 +72,6 @@ const userUpdate = async (payload: IUserUpdatePayload, user: IRequestUser) => {
 			omit: { password: true },
 		});
 
-		// Step 2: role অনুযায়ী profile update
 		let updatedProfile = null;
 
 		if (existingUser.role === Role.CITIZEN) {

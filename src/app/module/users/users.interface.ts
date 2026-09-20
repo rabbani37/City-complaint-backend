@@ -1,3 +1,5 @@
+import { exactOptional } from "zod";
+
 interface ICitizenUpdatePayload {
 	address?: string;
 }

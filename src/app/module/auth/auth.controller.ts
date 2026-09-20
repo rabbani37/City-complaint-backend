@@ -138,6 +138,32 @@ const logOut = catchAsync(async (_req: Request, res: Response) => {
 	});
 });
 
+const forgetPassword = catchAsync(async (req: Request, res: Response) => {
+	const payload = req.body;
+
+	await AuthService.forgetPassword(payload);
+
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "Sent OTP for reset your password",
+		data: {},
+	});
+});
+
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+	const payload = req.body;
+
+	await AuthService.resetPassword(payload);
+
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "Password Reset Succesfully",
+		data: {},
+	});
+});
+
 export const AuthController = {
 	registerCitizen,
 	verifyAccount,
@@ -146,4 +172,6 @@ export const AuthController = {
 	registerStaff,
 	refreshToken,
 	logOut,
+	forgetPassword,
+	resetPassword,
 };

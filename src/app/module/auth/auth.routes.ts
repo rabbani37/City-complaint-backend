@@ -4,6 +4,7 @@ import { AuthValidation } from "./auth.validation";
 import { AuthController } from "./auth.controller";
 import { auth } from "../../middleware/authRole";
 import { Role } from "../../../generated/prisma/enums";
+import { ro } from "zod/locales";
 
 const router = Router();
 
@@ -39,6 +40,18 @@ router.post(
 	"/staff-apply",
 	validationRequest(AuthValidation.registerStaffSchema),
 	AuthController.registerStaff,
+);
+
+router.post(
+	"/forget-password",
+	validationRequest(AuthValidation.forgetPasswordShcema),
+	AuthController.forgetPassword,
+);
+
+router.post(
+	"/reset-password",
+	validationRequest(AuthValidation.resetPasswordSchema),
+	AuthController.resetPassword,
 );
 
 export const AuthRoutes = router;

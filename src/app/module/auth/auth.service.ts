@@ -1,11 +1,13 @@
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import type {
+	ForgotPasswordPayload,
 	IGoogleLoginPayload,
 	ILoginUserPayload,
 	IRegistrationCitizenPayload,
 	IRegistrationStaffPayload,
 	IVerifyEmailPayload,
+	ResetPasswordPayload,
 } from "./auth.interface";
 import HttpStatus from "http-status";
 import bcrypt from "bcrypt";
@@ -461,6 +463,112 @@ const refreshToken = async (token: string) => {
 	};
 };
 
+const forgetPassword = async (payload: ForgotPasswordPayload) => {
+	const { email } = payload;
+
+	const isExsistUser = await prisma.user.findUnique({
+		where: { email },
+	});
+
+	if (!isExsistUser) {
+		throw new Error("User Not Found!");
+	}
+	if (isExsistUser.provider !== AuthProvider.CREDENTIALS) {
+		throw new Error("User is not credential register");
+	}
+	if (isExsistUser.status === UserStatus.BLOCKED) {
+		throw new Error("User is blocked");
+	}
+	if (isExsistUser.status === "DELETED" || isExsistUser.isDeleted) {
+		throw new Error("User is deleted");
+	}
+	if (!isExsistUser.emailVerified) {
+		throw new Error("User not veryfied");
+	}
+
+	const otpKey = `forget-password-otp:${isExsistUser.email}`;
+	const otpValue = crypto.randomInt(100000, 1000000);
+	const otpExpirationTime = 60 * 5;
+
+	// set OTP to redist
+	await redisClient.set(otpKey, otpValue, {
+		expiration: {
+			type: "EX",
+			value: otpExpirationTime,
+		},
+	});
+
+	// 3. send OTP for email verify
+
+	const templatePath = path.join(
+		process.cwd(),
+		"src/app/template/forgot-password.ejs",
+	);
+	const templateData = {
+		Name: isExsistUser.name,
+		Email: payload.email,
+		OTP: otpValue,
+		Expiration: otpExpirationTime / 60,
+	};
+	const templeteHtml = await ejs.renderFile(templatePath, templateData);
+
+	nodmailerTransporter.sendMail({
+		from: config.smtp_sender,
+		to: payload.email,
+		subject: "Forget Password OTP",
+		html: templeteHtml,
+	});
+};
+
+const resetPassword = async (payload: ResetPasswordPayload) => {
+	const { email, newPassword } = payload;
+
+	const isExsistUser = await prisma.user.findUnique({
+		where: { email },
+	});
+
+	if (!isExsistUser) {
+		throw new Error("User Not Found!");
+	}
+	if (isExsistUser.provider !== AuthProvider.CREDENTIALS) {
+		throw new Error("User is not credential register");
+	}
+	if (isExsistUser.status === UserStatus.BLOCKED) {
+		throw new Error("User is blocked");
+	}
+	if (isExsistUser.status === UserStatus.DELETED || isExsistUser.isDeleted) {
+		throw new Error("User is deleted");
+	}
+	if (!isExsistUser.emailVerified) {
+		throw new Error("User not veryfied");
+	}
+
+	const newHashPassword = await bcrypt.hash(
+		newPassword,
+		Number(config.bcrypt_salt_rounds),
+	);
+	await prisma.user.update({
+		where: { email },
+		data: { password: newHashPassword },
+	});
+
+	const templatesPath = path.join(
+		process.cwd(),
+		"src/app/template/reset-password.ejs",
+	);
+	const templetesHtml = await ejs.renderFile(templatesPath, {
+		Name: isExsistUser.name,
+		Email: isExsistUser.email,
+	});
+
+	await nodmailerTransporter.sendMail({
+		from: config.smtp_sender,
+		to: isExsistUser.email,
+		subject: "Password Changed Successfully ",
+		html: templetesHtml,
+	});
+};
+
 export const AuthService = {
 	registerCitizen,
 	verifyAccount,
@@ -468,4 +576,6 @@ export const AuthService = {
 	googleLogin,
 	registerStaff,
 	refreshToken,
+	forgetPassword,
+	resetPassword,
 };
