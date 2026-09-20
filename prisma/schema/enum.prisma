@@ -39,3 +39,8 @@ enum PaymentStatus {
   SUCCESS
   FAILED
 }
+
+enum CategoryTypes {
+  COMPLAIN
+  SERVICE
+}

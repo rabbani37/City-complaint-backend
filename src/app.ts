@@ -11,6 +11,7 @@ import { notFound } from "./app/middleware/notFound";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { UsersRoutes } from "./app/module/users/users.routes";
 import { DepartmentRoutes } from "./app/module/department/department.routes";
+import { CategoryRoutes } from "./app/module/category/category.routes";
 
 const app: Application = express();
 
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/users", UsersRoutes);
 app.use("/api/v1/departments", DepartmentRoutes);
+app.use("/api/v1/categories", CategoryRoutes);
 
 app.get("/api/v1/health", (_req: Request, res: Response) => {
 	res.status(200).json({
