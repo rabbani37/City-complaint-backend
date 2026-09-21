@@ -1,7 +1,8 @@
 // complaint.validation.ts
 import { z } from "zod";
+import { ComplaintStatus } from "../../../generated/prisma/enums";
 
-export const createComplaintSchema = z.object({
+const createComplaintSchema = z.object({
 	title: z
 		.string("Title is required")
 		.trim()
@@ -30,3 +31,21 @@ export const createComplaintSchema = z.object({
 });
 
 export type TCreateComplainInput = z.infer<typeof createComplaintSchema>;
+
+const updateStatusSchema = z.object({
+	status: z.enum(
+		[
+			ComplaintStatus.ASSIGNED,
+			ComplaintStatus.IN_PROGRESS,
+			ComplaintStatus.RESOLVED,
+			ComplaintStatus.CLOSED,
+		],
+		{ error: "Invalid status value" },
+	),
+	note: z.string().trim().optional(), // status change এর সাথে optional note
+});
+
+export const ComplaintValidation = {
+	createComplaintSchema, // আগের থেকে
+	updateStatusSchema,
+};
