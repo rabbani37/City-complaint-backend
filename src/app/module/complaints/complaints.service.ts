@@ -206,12 +206,14 @@ const getComplaintById = async (id: string, user: IRequestUser) => {
 		include: {
 			category: { include: { department: true } },
 
-			citizen: { select: { id: true, name: true, email: true } },
+			citizen: { select: { id: true, name: true, email: true, role: true } },
 			taskAssigned: {
 				orderBy: { createdAt: "desc" },
 				include: {
-					staff: { select: { id: true, name: true, email: true } },
-					assignedBy: { select: { id: true, name: true } },
+					staff: { select: { id: true, name: true, email: true, role: true } },
+					assignedBy: {
+						select: { id: true, name: true, email: true, role: true },
+					},
 				},
 			},
 

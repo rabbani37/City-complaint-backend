@@ -7,7 +7,7 @@ model Feedback {
   complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   citizenId String 
-  citizen   CitizenProfile @relation(fields: [citizenId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  citizen   CitizenProfile @relation(fields: [citizenId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

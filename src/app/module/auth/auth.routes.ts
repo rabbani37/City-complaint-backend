@@ -38,7 +38,7 @@ router.post(
 
 router.post(
 	"/staff-apply",
-	auth(Role.STAFF, Role.ADMIN),
+	// auth(Role.STAFF, Role.ADMIN),
 	validationRequest(AuthValidation.registerStaffSchema),
 	AuthController.registerStaff,
 );

@@ -2,7 +2,7 @@ model TaskAssigned {
   id String @id @default(uuid())
 
   staffId String
-  staff   StaffProfile @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  staff   StaffProfile @relation(fields: [staffId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
 
   assignedById String
   assignedBy   User   @relation(fields: [assignedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
