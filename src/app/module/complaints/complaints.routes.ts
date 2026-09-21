@@ -13,4 +13,6 @@ router.post(
 	ComplainsController.createComplaint,
 );
 
+router.get("/", ComplainsController.getALLComplaint);
+
 export const ComplaintRouter = router;
