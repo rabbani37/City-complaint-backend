@@ -175,7 +175,7 @@ const getMyAssignments = async (staffId: string, query: IQuery) => {
 	const sortBy = query.sortBy ? query.sortBy : "createdAt";
 	const sortOrder = query.sortOrder ? query.sortOrder : "desc";
 
-	const andCondition: TaskAssignedWhereInput[] = [];
+	const andCondition: TaskAssignedWhereInput[] = [{ staffId, isActive: true }];
 
 	// find Department name by searchBox or searchTerm || searching
 	if (query.searchTerm) {

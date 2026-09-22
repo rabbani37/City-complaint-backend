@@ -2,7 +2,7 @@ model Complaint {
   id          String  @id @default(uuid())
   title       String
   description String
-  location    String?
+  location    String
 
   latitude        Float?
   longitude       Float?

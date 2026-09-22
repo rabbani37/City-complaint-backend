@@ -1,6 +1,4 @@
-import { ComplaintStatus } from "../../../generated/prisma/enums";
-
-export interface ICreateComplaintPayload {
+export interface ICreateServiceRequestPayload {
 	title: string;
 	description: string;
 	location: string;

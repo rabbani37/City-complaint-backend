@@ -44,11 +44,8 @@ const reassignStaff = catchAsync(async (req: Request, res: Response) => {
 
 const getMyAssignments = catchAsync(async (req: Request, res: Response) => {
 	const user = req.user as IRequestUser;
-	const payload = req.query;
-	const result = await TaskAssignedService.getMyAssignments(
-		user.userId,
-		payload,
-	);
+	const query = req.query;
+	const result = await TaskAssignedService.getMyAssignments(user.userId, query);
 
 	sendResponse(res, {
 		statusCode: HttpStatus.OK,

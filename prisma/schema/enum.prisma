@@ -35,9 +35,11 @@ enum ServiceRequestStatus {
 }
 
 enum PaymentStatus {
-  INITIATED
-  SUCCESS
+  UNPAID
+  PAID
   FAILED
+  CANCELLED
+  REFUNDED
 }
 
 enum CategoryTypes {

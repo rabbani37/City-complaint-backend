@@ -1,15 +1,23 @@
 model Payment {
-  id               String         @id @default(uuid())
+  id String @id @default(uuid())
 
   serviceRequestId String         @unique
   serviceRequest   ServiceRequest @relation(fields: [serviceRequestId], references: [id])
 
-  amount           Decimal        @db.Decimal(10, 2)
-  status           PaymentStatus  @default(INITIATED)
-  
-  transactionId    String?
-  gateway          String?
+  status PaymentStatus @default(UNPAID)
 
+  amount   Decimal @db.Decimal(10, 2)
+  currency String  @default("BDT")
+
+  paymentGateway        String @default("bkash")
+  merchantInvoiceNumber String @unique // serviceRequest id
+
+  bkashPaymentId String? @unique
+  bkashTrxId     String?
+  payerReference String? // user email 
+  paidAt         String?
+
+  gatewayResponse Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,9 +1,13 @@
 model ServiceRequest {
-  id              String               @id @default(uuid())
-  title           String
-  description     String
-  status          ServiceRequestStatus @default(PENDING_PAYMENT)
-  fee             Decimal              @db.Decimal(10, 2)
+  id          String  @id @default(uuid())
+  title       String
+  description String
+  location    String
+
+  latitude      Float?
+  longitude     Float?
+  status        ServiceRequestStatus @default(PENDING_PAYMENT)
+  fee           Decimal              @db.Decimal(10, 2)
   serviceImages Json?
 
   citizenId String
