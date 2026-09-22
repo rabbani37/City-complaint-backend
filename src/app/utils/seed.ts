@@ -108,7 +108,7 @@ export const seedForStaff = async () => {
 						experienceYears: 5,
 						expertise: "electrician",
 						nid: "0123456",
-						approvedById: adminUser.adminProfile?.id as string, // Fixed: Now uses real Admin ID
+						approvedById: adminUser?.id as string, // Fixed: Now uses real Admin ID
 						departmentId: department.id, // Fixed: Now uses real Department ID
 					},
 				},

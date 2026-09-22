@@ -10,6 +10,7 @@ import { AppError } from "../../utils/AppError";
 import { IRequestUser } from "../auth/auth.interface";
 import { IPaymetnInitatePayload } from "./payment.interface";
 import HttpStatus from "http-status";
+import { IQuery } from "../../interfaces";
 
 const paymentInitiate = async (
 	payload: IPaymetnInitatePayload,
@@ -81,7 +82,7 @@ const paymentInitiate = async (
 		);
 	}
 
-	// 3. Database Write Operations dynamic (Upsert logic)
+	// 3. Database Write Operations dynamic
 	const transaction = await prisma.$transaction(async (tx) => {
 		if (serviceRequest.payment) {
 			await tx.payment.update({
@@ -92,7 +93,7 @@ const paymentInitiate = async (
 					gatewayResponse: bkashUrlResult,
 					bkashPaymentId: bkashUrlResult.paymentID,
 					payerReference: user.email,
-					status: PaymentStatus.UNPAID, // Status-ti abr initiate (UNPAID) hobe
+					status: PaymentStatus.UNPAID,
 				},
 			});
 		} else {
@@ -212,7 +213,51 @@ const paymentCallback = async (query: any) => {
 	return transactionResult;
 };
 
+const getAllOwnPayments = async (user: IRequestUser, query: IQuery) => {
+	const limit = query.limit ? Number(query.limit) : 10;
+	const page = query.page ? Number(query.page) : 1;
+	const skip = (page - 1) * limit;
+	const sortBy = query.sortBy ? query.sortBy : "createdAt";
+	const sortOrder = query.sortOrder ? query.sortOrder : "desc";
+
+	const where = {
+		serviceRequest: {
+			citizenId: user.userId,
+		},
+	};
+
+	const payments = await prisma.payment.findMany({
+		where,
+		include: {
+			serviceRequest: {
+				select: {
+					id: true,
+					title: true,
+					status: true,
+					category: { select: { name: true } },
+				},
+			},
+		},
+		orderBy: { [sortBy]: sortOrder },
+		take: limit,
+		skip,
+	});
+
+	const total = await prisma.payment.count({ where });
+
+	return {
+		data: payments,
+		meta: {
+			page,
+			limit,
+			total,
+			totalPages: Math.ceil(total / limit),
+		},
+	};
+};
+
 export const paymentService = {
 	paymentInitiate,
 	paymentCallback,
+	getAllOwnPayments,
 };

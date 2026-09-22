@@ -16,6 +16,9 @@ import { ComplaintsRoutes } from "./app/module/complaints/complaints.routes";
 import { TaskAssignedRoutes } from "./app/module/taskAssigned/taskAssigned.routes";
 import { ServiceRequestRoutes } from "./app/module/serviceRequest/serviceRequest.routes";
 import { PaymentRoutes } from "./app/module/payment/payment.routes";
+import { FeedbackRoutes } from "./app/module/feedback/feedback.routes";
+import { AdminController } from "./app/module/admin/admin.controller";
+import { AdminRoutes } from "./app/module/admin/admin.routes";
 
 const app: Application = express();
 
@@ -33,6 +36,8 @@ app.use("/api/v1/complaints", ComplaintsRoutes);
 app.use("/api/v1", TaskAssignedRoutes);
 app.use("/api/v1/serviceRequests", ServiceRequestRoutes);
 app.use("/api/v1/payments/", PaymentRoutes);
+app.use("/api/v1/complaints", FeedbackRoutes);
+app.use("/api/v1/admin", AdminRoutes);
 
 app.get("/api/v1/health", (_req: Request, res: Response) => {
 	res.status(200).json({

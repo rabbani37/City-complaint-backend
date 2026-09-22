@@ -14,5 +14,10 @@ router.post(
 	PaymentController.paymentInitiate,
 );
 router.get("/service/callback", PaymentController.paymentCallback);
+router.get(
+	"/my-payments",
+	auth(Role.CITIZEN),
+	PaymentController.getAllOwnPayments,
+);
 
 export const PaymentRoutes = router;
