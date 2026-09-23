@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { sendResponse } from "../../utils/sendResponse";
 import { paymentService } from "./payment.service";
 import { IRequestUser } from "../auth/auth.interface";
+import { IPaymentCallbackPayload } from "./payment.interface";
 
 const paymentInitiate = catchAsync(async (req: Request, res: Response) => {
 	const payload = req.body;
@@ -27,10 +28,8 @@ const paymentCallback = catchAsync(async (req: Request, res: Response) => {
 
 const getAllOwnPayments = catchAsync(async (req: Request, res: Response) => {
 	const user = req.user as IRequestUser;
-	const { data, meta } = await paymentService.getAllOwnPayments(
-		user,
-		req.query as any,
-	);
+	const query = req.query;
+	const { data, meta } = await paymentService.getAllOwnPayments(user, query);
 
 	sendResponse(res, {
 		statusCode: HttpStatus.OK,

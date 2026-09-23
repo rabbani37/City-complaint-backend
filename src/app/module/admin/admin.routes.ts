@@ -27,5 +27,10 @@ router.patch(
 	validationRequest(AdminValidation.changeUserRoleSchema),
 	AdminController.changeUserRole,
 );
+router.patch(
+	"/users/:id/activetion",
+	auth(Role.ADMIN),
+	AdminController.staffActivetion,
+);
 
 export const AdminRoutes = router;

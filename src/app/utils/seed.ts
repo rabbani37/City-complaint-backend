@@ -110,6 +110,7 @@ export const seedForStaff = async () => {
 						nid: "0123456",
 						approvedById: adminUser?.id as string, // Fixed: Now uses real Admin ID
 						departmentId: department.id, // Fixed: Now uses real Department ID
+						approvedAt: new Date(),
 					},
 				},
 			},

@@ -8,7 +8,10 @@ import { getBkashIdToken } from "../../lib/bKash";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { IRequestUser } from "../auth/auth.interface";
-import { IPaymetnInitatePayload } from "./payment.interface";
+import {
+	IPaymentCallbackPayload,
+	IPaymetnInitatePayload,
+} from "./payment.interface";
 import HttpStatus from "http-status";
 import { IQuery } from "../../interfaces";
 
@@ -116,7 +119,7 @@ const paymentInitiate = async (
 	return transaction;
 };
 
-const paymentCallback = async (query: any) => {
+const paymentCallback = async (query: Record<string, any>) => {
 	const transactionResult = await prisma.$transaction(async (tx) => {
 		const bkashIdToken = await getBkashIdToken();
 		const paymentID = query.paymentID;
@@ -191,7 +194,7 @@ const paymentCallback = async (query: any) => {
 		} else if (status === "cancel") {
 			await tx.payment.update({
 				where: {
-					appointmentId: executePaymentResult.merchantInvoiceNumber,
+					serviceRequestId: executePaymentResult.merchantInvoiceNumber,
 					bkashPaymentId: paymentID,
 				},
 				data: {

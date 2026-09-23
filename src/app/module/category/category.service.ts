@@ -8,7 +8,6 @@ import {
 import { IQuery } from "../../interfaces";
 import { CategoryWhereInput } from "../../../generated/prisma/models";
 import { CategoryTypes } from "../../../generated/prisma/enums";
-import { number } from "zod";
 
 const createCategory = async (payload: ICreateCategoryPayload) => {
 	const department = await prisma.department.findUnique({
@@ -20,7 +19,7 @@ const createCategory = async (payload: ICreateCategoryPayload) => {
 	}
 
 	const existing = await prisma.category.findUnique({
-		where: { name: payload.name },
+		where: { name: payload.name, isDeleted: false },
 	});
 
 	if (existing) {
@@ -115,6 +114,12 @@ const getAllCategories = async (query: IQuery) => {
 			type: query.type,
 		});
 	}
+	if (query.isPaid) {
+		const Paid = query.isPaid === "true" ? true : false!;
+		andCondition.push({
+			isPaid: Paid,
+		});
+	}
 
 	if (query.fee) {
 		const feeNumber = Number(query.fee);
@@ -188,13 +193,6 @@ const updateCategory = async (id: string, payload: IUpdateCategoryPayload) => {
 				"Category with this name already exists",
 			);
 		}
-	}
-
-	if (!payload.isPaid && payload.type !== CategoryTypes.COMPLAIN) {
-		throw new AppError(
-			HttpStatus.BAD_REQUEST,
-			"If Type is false, category type must be COMPLAIN",
-		);
 	}
 
 	if (payload.type === CategoryTypes.SERVICE) {

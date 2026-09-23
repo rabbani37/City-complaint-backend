@@ -206,13 +206,13 @@ const getComplaintById = async (id: string, user: IRequestUser) => {
 		include: {
 			category: { include: { department: true } },
 
-			citizen: { select: { id: true, name: true, email: true, role: true } },
+			citizen: { select: { id: true, name: true, email: true } },
 			taskAssigned: {
 				orderBy: { createdAt: "desc" },
 				include: {
-					staff: { select: { id: true, name: true, email: true, role: true } },
+					staff: { select: { id: true, name: true, email: true } },
 					assignedBy: {
-						select: { id: true, name: true, email: true, role: true },
+						select: { id: true, name: true, email: true },
 					},
 				},
 			},
@@ -234,7 +234,7 @@ const getComplaintById = async (id: string, user: IRequestUser) => {
 
 	if (user.role === Role.STAFF) {
 		const isAssignedToMe = complaint.taskAssigned.some(
-			(a) => a.staffId === user.userId && a.isActive,
+			(a: any) => a.staffId === user.userId && a.isActive,
 		);
 		if (!isAssignedToMe) {
 			throw new AppError(
@@ -271,6 +271,13 @@ const updateComplaintStatus = async (
 				"This complaint is not assigned to you",
 			);
 		}
+	}
+
+	if (complaint.status === ComplaintStatus.PENDING) {
+		throw new AppError(
+			HttpStatus.BAD_REQUEST,
+			"Complaint must be assigned first before updating the status",
+		);
 	}
 
 	// State machine validation

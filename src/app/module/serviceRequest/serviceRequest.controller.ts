@@ -40,31 +40,33 @@ const createServiceRequest = catchAsync(async (req: Request, res: Response) => {
 
 const getAllServiceRequests = catchAsync(
 	async (req: Request, res: Response) => {
-		const result = await ServiceRequestService.getAllServiceRequests(
-			req.query as any,
+		const { data, meta } = await ServiceRequestService.getAllServiceRequests(
+			req.query,
 		);
 
 		sendResponse(res, {
 			statusCode: HttpStatus.OK,
 			success: true,
 			message: "Service requests retrieved successfully",
-			data: result,
+			data,
+			meta,
 		});
 	},
 );
 
 const getMyServiceRequests = catchAsync(async (req: Request, res: Response) => {
 	const user = req.user as IRequestUser;
-	const result = await ServiceRequestService.getMyServiceRequests(
+	const { data, meta } = await ServiceRequestService.getMyServiceRequests(
 		user.userId,
-		req.query as any,
+		req.query,
 	);
 
 	sendResponse(res, {
 		statusCode: HttpStatus.OK,
 		success: true,
 		message: "Your service requests retrieved successfully",
-		data: result,
+		data,
+		meta,
 	});
 });
 

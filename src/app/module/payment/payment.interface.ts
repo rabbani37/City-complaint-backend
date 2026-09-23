@@ -7,3 +7,7 @@ export interface ICancelPaymentPayload {
 export interface IUpdateServiceStatusPayload {
 	status: string;
 }
+export interface IPaymentCallbackPayload {
+	paymentID: string;
+	status: string;
+}

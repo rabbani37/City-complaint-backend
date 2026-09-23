@@ -70,10 +70,24 @@ const changeUserRole = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const staffActivetion = catchAsync(async (req: Request, res: Response) => {
+	const adminUser = req.user as IRequestUser;
+	const targetUserId = req.params.id as string;
+	const result = await AdminService.staffActivetion(targetUserId, adminUser);
+
+	sendResponse(res, {
+		statusCode: HttpStatus.OK,
+		success: true,
+		message: "User Activetion successfully",
+		data: result,
+	});
+});
+
 export const AdminController = {
 	createAStaff,
 	getAllStaff,
 	userActiveBlock,
 	getDashboardStats,
 	changeUserRole,
+	staffActivetion,
 };

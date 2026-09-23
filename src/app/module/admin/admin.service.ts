@@ -15,7 +15,7 @@ import {
 } from "../auth/auth.interface";
 import HttpStatus from "http-status";
 import bcrypt from "bcrypt";
-import { fa, th } from "zod/locales";
+import { fa, id, th } from "zod/locales";
 import { Prisma } from "../../../generated/prisma/client";
 
 const getAllStaff = async (query: IQuery) => {
@@ -115,6 +115,7 @@ const createAStaff = async (
 					nid: payload.nid,
 					departmentId: payload.departmentId,
 					approvedById: userId,
+					approvedAt: new Date(),
 				},
 			},
 		},
@@ -136,6 +137,20 @@ const userActiveBlock = async (userId: string, adminId: string) => {
 	const user = await prisma.user.findUnique({
 		where: { id: userId, isDeleted: false },
 	});
+
+	if (!user) {
+		throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+	}
+	if (!user.emailVerified) {
+		throw new AppError(HttpStatus.CONFLICT, "User is Not Verified");
+	}
+	if (user.isDeleted || user.status === UserStatus.DELETED) {
+		throw new AppError(HttpStatus.CONFLICT, "User is deleted");
+	}
+
+	if (user.status !== UserStatus.ACTIVE) {
+		throw new AppError(HttpStatus.CONFLICT, "User is Not Verified");
+	}
 
 	const STATUS =
 		user?.status === UserStatus.ACTIVE
@@ -440,10 +455,44 @@ const reactivateOrCreateProfile = async (
 	}
 };
 
+const staffActivetion = async (
+	targetUserId: string,
+	adminUser: IRequestUser,
+) => {
+	const pendingStaff = await prisma.user.findUnique({
+		where: { id: targetUserId },
+	});
+
+	if (!pendingStaff) {
+		throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+	}
+
+	if (pendingStaff?.status === UserStatus.ACTIVE) {
+		throw new AppError(HttpStatus.CONFLICT, "User Already Active");
+	}
+	const approvedStaff = await prisma.user.update({
+		where: { id: targetUserId },
+		data: {
+			status: UserStatus.ACTIVE,
+			emailVerified: true,
+			staffProfile: {
+				update: {
+					approvedAt: new Date(),
+					approvedById: adminUser.userId,
+				},
+			},
+		},
+		omit: { password: true },
+		include: { staffProfile: true },
+	});
+	return approvedStaff;
+};
+
 export const AdminService = {
 	getAllStaff,
 	getDashboardStats,
 	changeUserRole,
 	createAStaff,
 	userActiveBlock,
+	staffActivetion,
 };

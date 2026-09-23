@@ -45,8 +45,8 @@ const getALLComplaint = catchAsync(async (req: Request, res: Response) => {
 		statusCode: HttpStatus.OK,
 		success: true,
 		message: "Retrive All Complaints Successfully",
-		data: data,
-		meta: meta,
+		data,
+		meta,
 	});
 });
 
