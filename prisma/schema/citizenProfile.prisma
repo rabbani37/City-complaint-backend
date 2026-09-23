@@ -10,6 +10,9 @@ model CitizenProfile {
 
   image_url     String?
   imagePublicId String?
+  
+isDeleted Boolean @default(false)
+  deletedAt DateTime?
 
   complaint      Complaint[]
   serviceRequest ServiceRequest[]

@@ -11,6 +11,9 @@ model AdminProfile {
     image_url     String?
     imagePublicId String?
 
+    isDeleted Boolean @default(false)
+  deletedAt DateTime?
+
     staffProfile StaffProfile[]
 
     createdAt DateTime @default(now())
