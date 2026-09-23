@@ -4,7 +4,6 @@ import { AuthValidation } from "./auth.validation";
 import { AuthController } from "./auth.controller";
 import { auth } from "../../middleware/authRole";
 import { Role } from "../../../generated/prisma/enums";
-import { ro } from "zod/locales";
 
 const router = Router();
 

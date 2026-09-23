@@ -27,3 +27,4 @@ pnpm-workspace.yaml
 .agents/
 .cursor/
 .vercel
+.env*.local

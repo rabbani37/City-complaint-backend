@@ -326,13 +326,7 @@ const updateServiceRequestStatus = async (
 		);
 	}
 
-	// if (serviceRequest.status === ServiceRequestStatus.) {
-	// 	throw new AppError(
-	// 		HttpStatus.BAD_REQUEST,
-	// 		"Complaint must be assigned first before updating the status",
-	// 	);
-	// }
-	// State machine validation
+
 	const allowedNextStatuses = ALLOWED_TRANSITIONS[serviceRequest.status];
 	if (!allowedNextStatuses.includes(payload.status)) {
 		throw new AppError(
@@ -348,6 +342,10 @@ const updateServiceRequestStatus = async (
 
 	return result;
 };
+
+
+
+
 
 export const ServiceRequestService = {
 	createServiceRequest,

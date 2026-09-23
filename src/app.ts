@@ -6,7 +6,6 @@ import express, {
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { AuthRoutes } from "./app/module/auth/auth.routes";
 import { notFound } from "./app/middleware/notFound";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { UsersRoutes } from "./app/module/users/users.routes";
@@ -17,8 +16,8 @@ import { TaskAssignedRoutes } from "./app/module/taskAssigned/taskAssigned.route
 import { ServiceRequestRoutes } from "./app/module/serviceRequest/serviceRequest.routes";
 import { PaymentRoutes } from "./app/module/payment/payment.routes";
 import { FeedbackRoutes } from "./app/module/feedback/feedback.routes";
-import { AdminController } from "./app/module/admin/admin.controller";
 import { AdminRoutes } from "./app/module/admin/admin.routes";
+import { AuthRoutes } from "./app/module/auth/auth.routes";
 
 const app: Application = express();
 
@@ -39,7 +38,7 @@ app.use("/api/v1/payments/", PaymentRoutes);
 app.use("/api/v1/complaints", FeedbackRoutes);
 app.use("/api/v1/admin", AdminRoutes);
 
-app.get("/api/v1/health", (_req: Request, res: Response) => {
+app.get("/", (_req: Request, res: Response) => {
 	res.status(200).json({
 		success: true,
 		message: "API is running",
